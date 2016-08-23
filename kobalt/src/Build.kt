@@ -21,10 +21,10 @@ val p = project {
     }
 
     dependencies {
-        compile("com.weblookandfeel:weblaf-ui:1.2.8")
-        compile("com.beust:klaxon:0.24")
-        compile("com.github.insubstantial:substance:7.3")
-        compile("org.pegdown:pegdown:1.6.0")
+        compile("com.weblookandfeel:weblaf-ui:")
+        compile("com.beust:klaxon:")
+        compile("com.github.insubstantial:substance:")
+        compile("org.pegdown:pegdown:")
     }
 
     dependenciesTest {}
