@@ -1,0 +1,7 @@
+workdir/
+.kobalt/
+.idea/
+kobaltBuild/
+lib/
+
+*.iml
