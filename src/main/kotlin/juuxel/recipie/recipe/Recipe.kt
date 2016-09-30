@@ -1,23 +1,23 @@
 package juuxel.recipie.recipe
 
-//import com.beust.klaxon.*
-//import juuxel.recipie.*
+import com.beust.klaxon.*
+import juuxel.recipie.*
 import juuxel.recipie.l10n.*
 
-/* TODO: JSON parsing
+// TODO: JSON parsing
 fun recipeOf(json: JsonObject): Recipe
-        = Recipe(json.localizedString("name"),
-        null,
-        json.localizedList("instructions"),
-        json.localizedString("author"),
-        null)
-        */
+        = Recipe(json.string("name")!!,
+        json.array<JsonObject>("ingredients")!!
+                .map { Recipe.Ingredient(it["name"].asString(), it["amount"].asString()) },
+        json.array<String>("instructions")!!.toList(),
+        json.string("author")!!,
+        json.array<String>("imagePaths")!!.toList())
 
 data class Recipe(
-        val name: LocalizedObject<String>,
-        val ingredients: LocalizedObject<List<Ingredient>>,
-        val instructions: LocalizedObject<List<String>>,
-        val author: LocalizedObject<String>,
+        val name: String,
+        val ingredients: List<Ingredient>,
+        val instructions: List<String>,
+        val author: String,
         val images: List<String>
 )
 {
@@ -25,6 +25,5 @@ data class Recipe(
 
     override fun toString() = nameWithAuthor
 
-    data class Ingredient(val name: LocalizedObject<String>,
-                          val amount: LocalizedObject<String>)
+    data class Ingredient(val name: String, val amount: String)
 }
