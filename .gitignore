@@ -1,7 +1,12 @@
-workdir/
-.kobalt/
+.gradle/
 .idea/
+.kobalt/
+build/
 kobaltBuild/
 lib/
+out/
+workdir/
 
 *.iml
+*.ipr
+*.iws
