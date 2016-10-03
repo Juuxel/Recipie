@@ -1,12 +1,10 @@
 package juuxel.recipie
 
 import com.alee.laf.*
-import com.alee.managers.language.*
 import juuxel.recipie.ui.*
 import java.awt.*
 import java.util.*
 import javax.swing.*
-import javax.swing.filechooser.*
 
 val version = "0.1.0-SNAPSHOT"
 
