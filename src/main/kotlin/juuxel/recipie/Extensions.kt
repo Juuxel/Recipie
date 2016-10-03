@@ -1,7 +1,9 @@
 package juuxel.recipie
 
 import java.awt.*
+import java.io.*
 import java.util.*
+import javax.swing.text.html.*
 
 // Extensions for the standard libraries of Java and Kotlin
 
@@ -51,3 +53,19 @@ fun <R> (() -> R).invokeSafely(): R?
         = try { invoke() } catch (e: Throwable) { null }
 
 fun <E> List<E>.unmodifiableCopy(): List<E> = Collections.unmodifiableList(this)
+
+// UI related extensions
+
+/**
+ * Creates an HTMLDocument out of this string.
+ * Modified from http://stackoverflow.com/a/6703755.
+ */
+fun String.htmlDocument(): HTMLDocument
+{
+    val reader = StringReader(this)
+    val htmlKit = HTMLEditorKit()
+    val htmlDoc = htmlKit.createDefaultDocument() as HTMLDocument
+    htmlKit.read(reader, htmlDoc, 0)
+
+    return htmlDoc
+}

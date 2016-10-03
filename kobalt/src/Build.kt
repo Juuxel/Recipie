@@ -1,7 +1,6 @@
 import com.beust.kobalt.*
 import com.beust.kobalt.plugin.packaging.*
 import com.beust.kobalt.plugin.application.*
-import com.beust.kobalt.plugin.kotlin.*
 
 val repos = repos()
 

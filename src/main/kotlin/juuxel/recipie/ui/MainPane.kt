@@ -1,12 +1,19 @@
 package juuxel.recipie.ui
 
+import com.alee.laf.filechooser.*
+import com.alee.laf.tabbedpane.*
+import com.alee.laf.text.*
+import com.beust.klaxon.*
+import com.beust.klaxon.Parser
+import juuxel.recipie.*
 import juuxel.recipie.l10n.*
 import juuxel.recipie.recipe.*
+import org.pegdown.*
 import java.awt.*
 import javax.swing.*
 import javax.swing.event.*
 
-class MainPane : JTabbedPane(JTabbedPane.BOTTOM)
+class MainPane : WebTabbedPane(WebTabbedPane.BOTTOM)
 {
     private var settingsDialog = lazy { SettingsDialog() }
 
@@ -22,7 +29,6 @@ class MainPane : JTabbedPane(JTabbedPane.BOTTOM)
     private fun constructUI()
     {
         val mainView = JPanel()
-        val mainViewTitle = JPanel()
         val actionPane = JPanel(GridLayout(0, 1))
         val settingsButton = JButton(Images.newIcon(Images.SETTINGS_ICON))
         val list = JList<Recipe>()
@@ -51,6 +57,30 @@ class MainPane : JTabbedPane(JTabbedPane.BOTTOM)
         mainView.add(listScrollPane)
         mainView.add(actionPane)
 
+        importRecipe.addActionListener {
+            val fileChooser = WebFileChooser()
+            fileChooser.fileFilter = recipeFilter
+
+            do
+            {
+                val num = fileChooser.showOpenDialog(frame.value)
+            } while (num != WebFileChooser.APPROVE_OPTION)
+
+            val file = fileChooser.selectedFile
+            val recipe = recipeOf(Parser().parse(file.inputStream()) as JsonObject)
+
+            val processor = PegDownProcessor()
+            val html = processor.markdownToHtml(recipe.instructions.joinToString(separator = "\n"))
+            val comp = WebTextPane(html.htmlDocument())
+
+            addTab(recipe.nameWithAuthor, comp)
+            setTabComponentAt(indexOfComponent(comp), createTabTitleComponent(
+                    recipe.nameWithAuthor,
+                    createTabCloseButton(this, comp)
+            ))
+            selectedComponent = comp
+        }
+
         settingsButton.toolTipText = L10n["settings.title"]
         settingsButton.addActionListener({ e ->
             settingsDialog.value.isVisible = true
@@ -58,14 +88,8 @@ class MainPane : JTabbedPane(JTabbedPane.BOTTOM)
 
         list.addListSelectionListener { this.onItemSelected(it) }
 
-        mainViewTitle.layout = BoxLayout(mainViewTitle, BoxLayout.X_AXIS)
-        mainViewTitle.isOpaque = false
-        mainViewTitle.add(JLabel(L10n["tabs.main"]))
-        mainViewTitle.add(Box.createHorizontalStrut(4))
-        mainViewTitle.add(settingsButton)
-
         addTab(L10n["tabs.error"], mainView)
-        setTabComponentAt(0, mainViewTitle)
+        setTabComponentAt(0, createTabTitleComponent(localize("tabs.main"), settingsButton))
     }
 
     // Called when a recipe is selected from

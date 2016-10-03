@@ -7,6 +7,7 @@ import juuxel.recipie.ui.skin.*
 import java.awt.*
 import javax.swing.*
 
+// TODO Move to a tab
 class SettingsDialog : JDialog(frame.value)
 {
     init
@@ -28,24 +29,17 @@ class SettingsDialog : JDialog(frame.value)
         val saveWarningLabel = JLabel(L10n["settings.saveWarning"])
         val controlPane = JPanel()
         val about = JPanel()
-        val title = JLabel("<html><h1>${L10n["settings.about.versionFormat", "version".to(version)]}</h1>")
-        val iconInfo = JLabel(L10n["settings.about.iconInfo", "url".to("https://www.icons8.com/")])
+        val title = JLabel("<html><h1>${L10n["settings.about.versionFormat"].smartFormat("version" to version)}</h1>")
+        val iconInfo = JLabel(L10n["settings.about.iconInfo"].smartFormat("url" to "https://www.icons8.com/"))
         val appearancePane = JPanel()
         val skinPane = JPanel(GridLayout(1, 0))
         val skinLabel = JLabel(L10n["settings.appearance.skins"])
         val skinBox = JComboBox<Skin>(skins.toTypedArray())
         val skinWarningLabel = JLabel("<html><b>${L10n["settings.appearance.skins.warning"]}</b>")
 
-        // Listeners
-        val settingsListener: ((Any) -> Unit) = { saveButton.isEnabled = true }
-        fun settingsUpdater(key: String): ((Any) -> Unit) { return {
-            settings.update(key)
-            settingsListener.invoke(it)
-        } }
-
         // Common GUI
         saveButton.addActionListener {
-            { settings.exportFile() }.invokeSafely()
+            { exportSettings() }.invokeSafely()
             saveButton.isEnabled = false
         }
 
@@ -66,10 +60,11 @@ class SettingsDialog : JDialog(frame.value)
         // Appearance GUI
         appearancePane.layout = BoxLayout(appearancePane, BoxLayout.Y_AXIS)
 
-        settings.map("skin", { skinBox.selectedItem })
-        skinBox.addActionListener(settingsUpdater("skin"))
+        skinBox.addActionListener {
+            settings.put("skin", skinBox.selectedItem)
+        }
 
-        val selectedSkin = skins.find { it.name == settings.json.string("skin") }
+        val selectedSkin = skins.find { it.name == settings.string("skin") }
 
         if (selectedSkin != null)
             skinBox.selectedItem = selectedSkin

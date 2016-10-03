@@ -1,12 +1,12 @@
 package juuxel.recipie
 
 import com.alee.laf.*
-import juuxel.recipie.settings.*
+import com.alee.managers.language.*
 import juuxel.recipie.ui.*
 import java.awt.*
-import java.nio.file.*
 import java.util.*
 import javax.swing.*
+import javax.swing.filechooser.*
 
 val version = "0.1.0-SNAPSHOT"
 
@@ -17,8 +17,7 @@ val version = "0.1.0-SNAPSHOT"
 // of the default LaF and the set LaF.
 val frame = lazy { createWindow() }
 
-// These are the app's settings
-val settings = Settings(Paths.get("."))
+val userDir = "." // I guess this is OK
 
 fun main(args: Array<String>)
 {
